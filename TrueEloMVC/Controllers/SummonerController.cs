@@ -1,84 +1,47 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using RiotSharp;
+using RiotSharp.Endpoints.StatusEndpoint;
+using RiotSharp.Endpoints.SummonerEndpoint;
+using RiotSharp.Misc;
+using Discord.Net;
+using Discord.WebSocket;
+using Remora.Discord.API.Abstractions.Gateway.Events;
 
 namespace TrueEloMVC.Controllers
 {
     public class SummonerController : Controller
     {
-        // GET: SummonerController
-        public ActionResult Index()
-        {
-           
-            return View();
-        }
+        
 
-        // GET: SummonerController/Details/5
-        public ActionResult Details(int id)
+
+        [HttpGet]
+        public IActionResult Index()
         {
             return View();
         }
 
-        // GET: SummonerController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: SummonerController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public object Index(string summoner_region, string summoner_name)
         {
+            var api = RiotApi.GetDevelopmentInstance("RGAPI-f944f559-6c6e-4bf5-b2fa-554415c7df9d");
+            RiotSharp.Misc.Region region = (Region)Convert.ToInt32(summoner_region);
             try
             {
-                return RedirectToAction(nameof(Index));
+                var summoner = api.Summoner.GetSummonerByNameAsync(region, summoner_name).Result;
+                return /*id(summoner.AccountId.ToString();*/  LocalRedirect($"/Summoner/id/{summoner.AccountId}");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                {
+                    ViewBag.Message = "Not found... Try again";
+                    return View();
+                }
             }
         }
-
-        // GET: SummonerController/Edit/5
-        public ActionResult Edit(int id)
+                        
+        public IActionResult id(string RiotAccountId)
         {
             return View();
-        }
-
-        // POST: SummonerController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: SummonerController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: SummonerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

@@ -19,19 +19,14 @@ namespace TrueEloMVC.Controllers
         {
             this.db = db;
         }
+        [HttpGet ]
         public async Task<IActionResult> Index()
         {
-            return View(await db.Users.ToListAsync());
+            return View();
         }
 
-        //[HttpGet]
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
         [HttpPost]
-        public async Task<IActionResult> Index(User user, string summoner_region, string summoner_name)
+        public async Task<IActionResult> Index(string summoner_region, string summoner_name)
         {
 
            
@@ -40,25 +35,35 @@ namespace TrueEloMVC.Controllers
             try
             {
                 var summoner = api.Summoner.GetSummonerByNameAsync(region, summoner_name).Result;
+                User user = new();
+                user.Riot.SummonerAccontRegion = summoner.Region.ToString();
+                user.Riot.SummonerAccountId = summoner.AccountId.ToString();
+
                 db.Users.Add(user);
-                await db.SaveChangesAsync();
-                return /*id(summoner.AccountId.ToString();*/  LocalRedirect($"/Summoner/id/{summoner.Region}/{summoner.AccountId}");
+                db.SaveChanges();
+                return /*id(summoner.AccountId.ToString();*/  RedirectToActionPermanent("id");
+            }
+            catch (RiotSharpException ex)
+            {
+                
+                ViewBag.Message = ex.Message;
+                return View();
+
             }
             catch (Exception ex)
             {
-                {
-                    ViewBag.Message = "Not found... Try again";
-                    return View();
-                }
+
+                ViewBag.Message = ex.Message;
+                return View();
+
             }
         }
 
 
-       
-                        
-        public IActionResult id(string RiotRegion,string RiotAccountId)
+
+        public async Task<IActionResult> id()
         {
-            return View();
+            return View(await db.Users.ToListAsync());
         }
     }
 }

@@ -1,15 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model TrueEloMVC.Models.User;
 
 
     
 <p> @ViewBag.Message</p>
     <form method="post">
-        
-        <input type="text" placeholder="Enter summoner name" name="summoner_name" />
 
-        <select name="summoner_region">
+    <input type="text" placeholder="Enter summoner name" name="summoner_name" />
+
+    <select  name="summoner_region">
             @{
                 Array regionArray = Enum.GetValues(typeof(RiotSharp.Misc.Region));
                 int i = 0;

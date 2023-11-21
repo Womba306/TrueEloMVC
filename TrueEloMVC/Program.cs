@@ -6,6 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
+
+
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,11 +31,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
-string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-
-
-builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
 
 
 app.MapControllerRoute(

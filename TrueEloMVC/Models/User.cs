@@ -10,5 +10,7 @@
 
         public string RiotAccount { get; set; } // << RiotSumonnerAccountId
         public string RiotAccontRegion { get; set; } // << RiotSumonnerRegion
+
+       
     }
 }

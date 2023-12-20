@@ -1,14 +1,33 @@
-﻿@using TrueEloMVC.Models;
-@model IEnumerable<TrueEloMVC.Models.User>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-@{
-    <a>@Model;</a>
-
+@using TrueEloMVC.Models;
+@model IEnumerable<User>;
 
 
+<h1>Список пользователей</h1>
+
+
+<table>
+    <tr>
+        <th>
+            <a asp-action="Id" asp-route-sortOrder="@ViewBag.NameSort">
+                Имя
+            </a>
+        </th>
+        <th>
+            <a asp-action="Id" asp-route-sortOrder="@ViewBag.MMRSort">
+               Рейтинг
+            </a>
+        </th>
+           </tr>
+    @foreach (User u in Model)
+    {
+        <tr><td>@u.Name</td><td>@u.MMR</td></tr>
+    }
+</table>
 
 
 
 
 
-}
+
